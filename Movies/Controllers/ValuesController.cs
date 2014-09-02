@@ -12,7 +12,7 @@ namespace Movies.Controllers
     {
         MovieContext db = new MovieContext();
         // GET api/values
-        public IEnumerable<Movie> Get()
+        public IEnumerable<Movie> GetMovies()
         {
             return db.Movies.ToList();
         }
