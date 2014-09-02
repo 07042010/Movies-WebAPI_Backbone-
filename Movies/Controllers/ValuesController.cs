@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Movies.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,16 +10,17 @@ namespace Movies.Controllers
 {
     public class ValuesController : ApiController
     {
+        MovieContext db = new MovieContext();
         // GET api/values
-        public IEnumerable<string> Get()
+        public IEnumerable<Movie> Get()
         {
-            return new string[] { "value1", "value2" };
+            return db.Movies.ToList();
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public IEnumerable<Actor> Get(int id)
         {
-            return "value";
+            return db.Actors.Where(x=>x.MovieId==id).ToList();
         }
 
         // POST api/values
