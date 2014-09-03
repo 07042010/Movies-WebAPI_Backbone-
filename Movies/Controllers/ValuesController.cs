@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Routing;
 using System.Web.Http;
 
 namespace Movies.Controllers
@@ -12,7 +13,8 @@ namespace Movies.Controllers
     {
         MovieContext db = new MovieContext();
         // GET api/values
-        public Dictionary<string, object>[] GetMovies()
+        [HttpGet]
+        public Dictionary<string, object>[] Movies()
         {
             Movie[] array = db.Movies.ToArray();
             Dictionary<string, object>[] dict = new Dictionary<string, object>[array.Length];
@@ -29,9 +31,22 @@ namespace Movies.Controllers
         }
 
         // GET api/values/5
-        public IEnumerable<Actor> Get(int id)
+        [HttpGet]
+        public Dictionary<string, object>[] Actors()
         {
-            return db.Actors.Where(x=>x.MovieId==id).ToList();
+            Actor[] array = db.Actors.ToArray();
+            Dictionary<string, object>[] dict = new Dictionary<string, object>[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                var tempdict = new Dictionary<string, object>();
+                tempdict.Add("Id", array[i].Id);
+                tempdict.Add("FullName", array[i].FullName);
+                tempdict.Add("Role", array[i].Role);
+                tempdict.Add("MovieId", array[i].MovieId);
+                dict[i] = tempdict;
+            }
+            return dict;
         }
+
     }
 }
