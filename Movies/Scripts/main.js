@@ -64,7 +64,8 @@
         movieClick: function (e) {
             movId = this.model.get('Id');
             Actors.each(this.updateActors);
-            
+            debugger;
+            $('div#actorsblock').html(actorView.render().el);
         },
         updateActors: function(item, i, arr)
         {
@@ -79,20 +80,35 @@
         tagName: 'ul',
         className: 'unstyled',
         render: function () {
-            this.collection.each(this.addOne, this);
+            Actors.each(this.addOne, this);
             return this;
         },
-        addOne: function (Movie) {
-            var oneView = new ActorView({ model: Movie });
+        addOne: function (actor) {
+            var oneView = new ActorView({ model: actor });
             this.$el.append(oneView.render().el);
         }
     });
 
     var ActorView = Backbone.View.extend({
-        tagName: 'li',
+        tagName: 'li',     	
+        template: '#actors',
         render: function () {
-            this.$el.html(this.model.get('Id') + '. ' + this.model.get('FullName') + ' ( ' + this.model.get('Role') + ' ) ');
+            var template = _.template($(this.template).html());
+            this.$el.html(template(this.model.toJSON()));
             return this;
+        }
+    });
+
+    
+
+    var Actors = new ActorList;
+    var actorView = new ActorsViews;
+
+    Actors.fetch({
+        success: function (Actors) {
+            console.log(Actors.toJSON());
+            actorView = new ActorsViews({ collectiovn: Actors });
+            $('div#actorsblock').append(actorView.render().el);
         }
     });
 
@@ -104,16 +120,5 @@
             var tasksView = new MovieViews({ collection: Movies });
             tasksView.render();
             $('div#moviesblock').append(tasksView.el);
-        }
-    });
-
-    var Actors = new ActorList;
-
-    Actors.fetch({
-        success: function (Actors) {
-            console.log(Actors.toJSON());
-            var tasksView = new ActorsViews({ collection: Actors });
-            tasksView.render();
-            $('div#actorsblock').append(tasksView.el);
         }
     });
